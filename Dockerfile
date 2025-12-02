@@ -7,18 +7,19 @@ ENV PYTHONUNBUFFERED=1
 # Set work directory
 WORKDIR /
 
-# Install system dependencies (optional but common)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
 
 # Copy Django project
-COPY . .
+COPY . /
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 # Expose port
 EXPOSE 8000
